@@ -1,0 +1,137 @@
+additional_paths: []
+category: tutorial
+commands:
+- command: request_validation
+  id: a55ff18ca11a11ec873b76b8097b6fb2
+  kwargs:
+    aspect_options:
+      pre:
+        process: local_employee_id = context.resources["local_employee_id"]
+    body:
+      $schema: http://json-schema.org/draft-07/schema#
+      additionalProperties: false
+      minimumProperties: 1
+      properties:
+        employee:
+          additionalProperties: false
+          minimumProperties: 1
+          properties:
+            name:
+              type: string
+          required:
+          - name
+      required:
+      - employee
+    headers:
+      properties:
+        Content-Type:
+          enum:
+          - application/json
+          type: string
+      required:
+      - Content-Type
+      type: object
+    resources:
+      $schema: http://json-schema.org/draft-07/schema#
+      properties:
+        local_employee_id:
+          format: regex_hyph_uuid
+          type: string
+      required:
+      - local_employee_id
+      type: object
+  label: Request Validation
+- command: script
+  id: a56029fea11a11ec873b76b8097b6fb2
+  kwargs:
+    cancellation:
+      actions:
+      - action_type: script
+        code: |-
+          if not local_employee:
+              return
+
+          async with model.aiodb() as conn:
+              async with conn.begin() as trans:
+                  local_employee.status = "error"
+                  faker("localEmployeeSaveFake2")
+                  await local_employee.save(conn=conn, tran=trans)
+      cancellable: true
+    code: |-
+      try:
+          body = context.request.body.dictionary
+
+          async with model.aiodb() as conn:
+              async with conn.begin() as trans:
+                  # レコード検索
+                  local_employee = await atom.LocalEmployee.load(local_employee_id,
+                                                                 conn=conn,
+                                                                 for_update=True)
+                  if not local_employee:
+                      raise Error(404, f"Specified local employee {local_employee_id} not found")
+
+                  local_employee += body["employee"]
+                  local_employee.status = "registering"
+
+                  # レコード更新
+                  faker("localEmployeeSaveFake")
+                  await local_employee.save(conn=conn, tran=trans)
+
+          # 応答返却
+          res = dict(employee=dict(id=local_employee.id,
+                                   name=local_employee.name,
+                                   position=local_employee.position,
+                                   status=local_employee.status))
+          context.session.set_status(202)
+          context.session.finish(res)
+
+      except Error as e:
+          raise
+      except Exception as e:
+          raise Error(500, "Internal Server Error")
+  label: Update DB Record
+- command: script
+  id: a56038e0a11a11ec873b76b8097b6fb2
+  kwargs:
+    code: |-
+      faker("sleepFake")
+      await asyncio.sleep(10)
+  label: Sleep
+- command: script
+  id: a5604b1ea11a11ec873b76b8097b6fb2
+  kwargs:
+    code: |-
+      local_employee.status = "registered"
+
+      async with model.aiodb() as conn:
+          async with conn.begin() as trans:
+              faker("localEmployeeSaveFake3")
+              await local_employee.save(conn=conn, tran=trans)
+  label: Delete DB Record
+connect_timeout: 60
+global_variables:
+  local_employee:
+    description: ''
+    initial: null
+  local_employee_id:
+    description: ''
+    initial: null
+method: PATCH
+name: LocalUpdateEmployee
+request_timeout: 60
+routing_auto_generation_mode: true
+routing_options:
+  scope: secure
+spec:
+  response:
+    normal:
+      codes:
+      - 200
+transaction:
+  async: true
+  enable: true
+  xname: ''
+update: '2022-05-12T09:19:58.591368+09:00'
+uri: /local/employees/{local_employee_id}
+variable_groups: []
+version: 8

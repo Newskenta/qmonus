@@ -1,0 +1,15 @@
+# コンテンツ設定
+content : 
+  ## title
+  title: "title ( set from yaml )"
+  ## metaタグ設定
+  meta:
+    description: "description ( set from yaml )"
+  build:
+    cwd: "/var/plugins/handson-gui/sample-vue"
+    command: "npm i --legacy-peer-deps&&npm run build"
+    watch:
+      path: "./"
+    cpuCap:	90
+    memCap: 10000
+production: false

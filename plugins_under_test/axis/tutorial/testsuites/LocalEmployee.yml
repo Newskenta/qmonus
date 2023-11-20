@@ -1,0 +1,10 @@
+category: tutorial
+name: LocalEmployee
+suites:
+  testcases:
+  - LocalEmployee_Create
+  - LocalEmployee_Get
+  - LocalEmployee_Update
+  - LocalEmployee_Delete
+update: '2023-06-28T22:51:50.865879+09:00'
+version: 1

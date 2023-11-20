@@ -1,0 +1,30 @@
+assertion:
+  begin: |-
+    async def hoge(*args, **kwargs):
+        pass
+  output: |
+    async def assertion():
+        # code
+        assert Response.code == 202, "Invalid response code %r" % Response.code
+  progress: []
+category: tutorial
+cleanup: |-
+  async def hoge(*args, **kwargs):
+      # LocalDeleteEmployeeのSleep完了を待機
+      await asyncio.sleep(10)
+fakers: {}
+input:
+  headers:
+    Content-Type: application/json
+  method: DELETE
+  path: |-
+    async def reqPath():
+        # Employee-Updated-01のIDを取得
+        local_employee = await atom.LocalEmployee.retrieve(name="Employee-Updated-01")
+        local_employee_id = local_employee[0].id
+
+        return f"/local/employees/{local_employee_id}"
+name: LocalEmployee_Delete
+target: LocalDeleteEmployee
+update: '2023-06-28T22:48:11.822448+09:00'
+version: 1

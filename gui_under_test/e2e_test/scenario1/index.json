@@ -1,0 +1,31 @@
+{
+    "description": "",
+    "paramSchema": {
+        "type": "object",
+        "properties": {}
+    },
+    "params": {
+        "url": "https://api-front-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.sdk-lab.qmonus.net/",
+        "username": "{your_test_account_id}",
+        "password": "{your_test_account_password}",
+        "api": {
+            "limit_length": "/test/test/test/test/test/test/test",
+            "success_path": "/healthcheck/ref/versions",
+            "fail_path": "/test"
+        },
+        "link": {
+            "text": "Tutorial page",
+            "url": "https://developer.qmonus.net/#/document/casval/top"
+        }
+    },
+    "defaultOptions": {
+        "lang": "en-US",
+        "client": "chrome",
+        "viewport": {
+            "width": 1366,
+            "height": 768
+        },
+        "headless": true,
+        "snapshotQuality": 80
+    }
+}

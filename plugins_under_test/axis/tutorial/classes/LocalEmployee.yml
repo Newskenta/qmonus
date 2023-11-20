@@ -1,0 +1,36 @@
+abstract: false
+api_generation: false
+attributes:
+  identifier:
+    field_immutable: true
+    field_name: id
+    field_persistence: true
+    field_type: string
+  local_fields:
+  - field_immutable: false
+    field_name: name
+    field_nullable: true
+    field_persistence: true
+    field_type: string
+    field_unique: false
+  - field_immutable: false
+    field_name: position
+    field_nullable: true
+    field_persistence: true
+    field_type: string
+    field_unique: false
+  - field_immutable: false
+    field_name: status
+    field_nullable: true
+    field_persistence: true
+    field_type: string
+    field_unique: false
+category: tutorial
+created_at: '2022-03-11T17:33:24.007276+09:00'
+methods:
+  class_methods: []
+  instance_methods: []
+name: LocalEmployee
+persistence: true
+update: '2022-03-11T17:33:24.007312+09:00'
+version: 1

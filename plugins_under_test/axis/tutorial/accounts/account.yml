@@ -1,0 +1,4 @@
+- username: test-user@target.env
+  password: C7ZE7q58iQFXaQG3fQ
+  role: lab_guest
+  expire_days: 30

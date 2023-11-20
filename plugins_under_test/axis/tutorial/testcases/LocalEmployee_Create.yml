@@ -1,0 +1,28 @@
+assertion:
+  begin: |-
+    async def hoge(*args, **kwargs):
+        pass
+  output: |
+    async def assertion():
+        # code
+        assert Response.code == 202, "Invalid response code %r" % Response.code
+  progress: []
+category: tutorial
+cleanup: |-
+  async def wait(*args, **kwargs):
+      # LocalCreateEmployeeのSleep完了を待機
+      await asyncio.sleep(10)
+fakers: {}
+input:
+  body:
+    employee:
+      name: Employee-01
+      position: manager
+  headers:
+    Content-Type: application/json
+  method: POST
+  path: /local/employees
+name: LocalEmployee_Create
+target: LocalCreateEmployee
+update: '2023-06-28T22:39:57.250690+09:00'
+version: 1

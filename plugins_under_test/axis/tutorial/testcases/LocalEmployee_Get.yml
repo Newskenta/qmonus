@@ -1,0 +1,26 @@
+assertion:
+  begin: |-
+    async def hoge(*args, **kwargs):
+        pass
+  output: |
+    async def assertion():
+        # code
+        assert Response.code == 200, "Invalid response code %r" % Response.code
+  progress: []
+category: tutorial
+fakers: {}
+input:
+  headers:
+    Content-Type: application/json
+  method: GET
+  path: |-
+    async def reqPath():
+        # Employee-01のIDを取得
+        local_employee = await atom.LocalEmployee.retrieve(name="Employee-01")
+        local_employee_id = local_employee[0].id
+
+        return f"/local/employees/{local_employee_id}"
+name: LocalEmployee_Get
+target: LocalGetEmployee
+update: '2023-06-28T22:43:51.799575+09:00'
+version: 1

@@ -1,0 +1,65 @@
+additional_paths: []
+category: tutorial
+commands:
+- command: request_validation
+  id: a55ff18ca11a11ec873b76b8097b6fb2
+  kwargs:
+    resources:
+      $schema: http://json-schema.org/draft-07/schema#
+      properties:
+        local_employee_id:
+          format: regex_hyph_uuid
+          type: string
+      required:
+      - local_employee_id
+      type: object
+  label: Request Validation
+- command: script
+  id: a56029fea11a11ec873b76b8097b6fb2
+  kwargs:
+    code: |-
+      try:
+          local_employee_id = context.resources["local_employee_id"]
+
+          async with model.aiodb() as conn:
+              async with conn.begin() as trans:
+                  # レコード検索
+                  local_employee = await atom.LocalEmployee.load(local_employee_id,
+                                                                 conn=conn)
+                  if not local_employee:
+                      raise Error(404, f"Specified local employee {local_employee_id} not found")
+
+          # 応答返却
+          res = dict(employee=dict(id=local_employee.id,
+                                   name=local_employee.name,
+                                   position=local_employee.position,
+                                   status=local_employee.status))
+          context.session.set_status(200)
+          context.session.finish(res)
+
+      except Error as e:
+          raise
+      except Exception as e:
+          raise Error(500, "Internal Server Error")
+  label: Update DB Record
+connect_timeout: 60
+global_variables: {}
+method: GET
+name: LocalGetEmployee
+request_timeout: 60
+routing_auto_generation_mode: true
+routing_options:
+  scope: secure
+spec:
+  response:
+    normal:
+      codes:
+      - 200
+transaction:
+  async: true
+  enable: false
+  xname: ''
+update: '2022-03-14T15:24:00.073198+09:00'
+uri: /local/employees/{local_employee_id}
+variable_groups: []
+version: 6
